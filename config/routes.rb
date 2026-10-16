@@ -18,4 +18,8 @@ Rails.application.routes.draw do
   get "top/signin", to: "top#signin", as: :signin
   post "top/signin", to: "top#signin_post"
   get "top/signout", to: "top#signout", as: :signout
+  post "top/tweet", to: "top#create_tweet", as: :tweet
+  delete "top/tweet/:id", to: "top#delete_tweet", as: :delete_tweet
+  post "top/like/:id", to: "top#like_tweet", as: :like_tweet
+  delete "top/like/:id", to: "top#unlike_tweet"
 end

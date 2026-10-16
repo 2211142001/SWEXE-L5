@@ -2,8 +2,24 @@
 .main {
     .tweet {
         border: 1px solid #ccc;
-        padding: 10px;
+        padding: 16px;
         margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .user {
+        font-weight: bold;
+    }
+
+    .controller {
+        display: flex;
+        gap: 8px;
+    }
+
+    .spacer {
+        flex-grow: 1;
     }
 }
 </style>
@@ -20,10 +36,28 @@
 <% end %>
 
 <div class="main">
+    <% if session[:user_id] %>
+        <%= form_with url: tweet_path, method: :post do |form| %>
+            <%= form.text_area :message, placeholder: "いまなにしてる？" %>
+            <%= form.submit "ツイート" %>
+        <% end %>
+    <% end %>
+
     <% @tweets.each do |tweet| %>
         <div class="tweet">
-            <p><%= tweet.user.uid %></p>
-            <p><%= tweet.message %></p>
+            <div class="user"><%= tweet.user.uid %></div>
+            <div><%= tweet.message %></div>
+            <div class="controller">
+                <div><%= tweet.likes.count %>いいね</div>
+                <% if session[:user_id] %>
+                    <%= link_to 'いいね', like_tweet_path(tweet.id), data: { turbo_method: :post } %>
+                    <%= link_to 'いいね解除', like_tweet_path(tweet.id), data: { turbo_method: :delete } %>
+                    <div class="spacer"></div>
+                    <% if tweet.user.id == session[:user_id] %>
+                        <%= link_to '削除', delete_tweet_path(tweet.id), data: { turbo_method: :delete } %>
+                    <% end %>
+                <% end %>
+            </div>
         </div>
     <% end %>
 </div>
