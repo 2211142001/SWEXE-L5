@@ -61,3 +61,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "sqlite3", ">= 2.1", group: :development
+gem "pg", group: :production
