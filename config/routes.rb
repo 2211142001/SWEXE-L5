@@ -22,4 +22,6 @@ Rails.application.routes.draw do
   delete "top/tweet/:id", to: "top#delete_tweet", as: :delete_tweet
   post "top/like/:id", to: "top#like_tweet", as: :like_tweet
   delete "top/like/:id", to: "top#unlike_tweet"
+  get "top/profile", to: "top#profile", as: :profile
+  post "top/profile", to: "top#update_profile"
 end

@@ -122,6 +122,24 @@ class TopController < ApplicationController
     end
   end
 
+  def profile
+    @profile = Profile.find_by(user_id: session[:user_id]) || Profile.new(user_id: session[:user_id])
+  end
+
+  def update_profile
+    @profile = Profile.find_by(user_id: session[:user_id]) || Profile.new(user_id: session[:user_id])
+    @profile.message = params[:profile][:message]
+
+    if @profile.save
+      @profile = Profile.find_by(user_id: session[:user_id])
+      flash[:message] = "プロフィールを更新しました"
+      redirect_to profile_path
+    else
+      flash[:message] = "プロフィールの更新に失敗しました"
+      render :profile, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def user_params

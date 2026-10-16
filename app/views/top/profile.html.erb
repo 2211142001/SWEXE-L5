@@ -1,0 +1,14 @@
+<% if flash[:message] %>
+    <p><%= flash[:message] %></p>
+<% end %>
+
+<% if session[:user_id] %>
+    <p>ユーザーID: <%= @profile.user.uid %></p>
+    <%= form_with model: @profile, url: profile_path, method: :post  do |f| %>
+        <%= f.label :message, 'プロフィール' %>
+        <%= f.text_field :message %>
+        <%= f.submit '更新' %>
+    <% end %>
+<% else %>
+    <p>ログインしてください</p>
+<% end %>

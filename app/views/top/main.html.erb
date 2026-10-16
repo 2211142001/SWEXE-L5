@@ -10,7 +10,16 @@
     }
 
     .user {
+        display: flex;
+        gap: 8px;
+        align-items: center;
         font-weight: bold;
+    }
+
+    .profile {
+        font-weight: normal;
+        font-size: 0.9em;
+        color: #666;
     }
 
     .controller {
@@ -45,7 +54,12 @@
 
     <% @tweets.each do |tweet| %>
         <div class="tweet">
-            <div class="user"><%= tweet.user.uid %></div>
+            <div class="user">
+                <div><%= tweet.user.uid %></div>
+                <% if tweet.user.profile && tweet.user.profile.message %>
+                    <div class="profile"><%= tweet.user.profile.message %></div>
+                <% end %>
+            </div>
             <div><%= tweet.message %></div>
             <div class="controller">
                 <div><%= tweet.likes.count %>いいね</div>
