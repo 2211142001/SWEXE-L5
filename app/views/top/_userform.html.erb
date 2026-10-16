@@ -1,0 +1,25 @@
+<% signup = local_assigns.fetch(:signup, false) %>
+<% if (@user && @user.errors.present?) || flash[:message].present? %>
+  <h3>入力内容にエラーがあります</h3>
+  <ul>
+    <% if @user && @user.errors.present? %>
+        <% @user.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+        <% end %>
+    <% else %>
+        <li><%= flash[:message] %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= form_with model: @user, url: url do |f| %>
+  <p>
+    <%= f.label :uid, 'ユーザー' %>
+    <%= f.text_field :uid %>
+  </p>
+  <p>
+    <%= f.label :pass, 'パスワード' %>
+    <%= f.password_field :pass %>
+  </p>
+    <%= f.submit signup ? '登録' : 'ログイン' %>
+<% end %>

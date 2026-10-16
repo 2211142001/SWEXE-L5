@@ -1,0 +1,29 @@
+<style>
+.main {
+    .tweet {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+}
+</style>
+
+<% if flash[:message] %>
+    <p><%= flash[:message] %></p>
+<% end %>
+
+<% if session[:user_id] %>
+    <%= link_to 'ログアウト', signout_path %>
+<% else %>
+    <%= link_to 'ログイン', signin_path %>
+    <%= link_to '新規登録', signup_path %>
+<% end %>
+
+<div class="main">
+    <% @tweets.each do |tweet| %>
+        <div class="tweet">
+            <p><%= tweet.user.uid %></p>
+            <p><%= tweet.message %></p>
+        </div>
+    <% end %>
+</div>
