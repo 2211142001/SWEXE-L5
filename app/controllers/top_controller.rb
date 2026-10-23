@@ -87,18 +87,14 @@ class TopController < ApplicationController
   end
 
   def like_tweet
-    user = current_user
-    liked_tweet = user.like_tweets.find_by(id: params[:id])
-    if liked_tweet
+    tweet = Tweet.find(params[:id])
+    if tweet.liked?(current_user)
       flash[:message] = "このツイートは既にいいねされています"
       redirect_to root_path, status: :unprocessable_entity
       return
     end
 
-    tweet = Tweet.find(params[:id])
-    user.like_tweets << tweet
-
-    if user.save
+    if tweet.like(current_user)
       flash[:message] = "ツイートをいいねしました"
       redirect_to root_path
     else
@@ -108,14 +104,15 @@ class TopController < ApplicationController
   end
 
   def unlike_tweet
-    user = current_user
     tweet = Tweet.find(params[:id])
-    liked_tweet = user.like_tweets.find_by(id: tweet.id)
-
-    if liked_tweet
-      user.like_tweets.delete(liked_tweet)
-      flash[:message] = "ツイートのいいねを解除しました"
-      redirect_to root_path
+    if tweet.liked?(current_user)
+      if tweet.unlike(current_user)
+        flash[:message] = "ツイートのいいねを解除しました"
+        redirect_to root_path
+      else
+        flash[:message] = "ツイートのいいね解除に失敗しました"
+        redirect_to root_path, status: :unprocessable_entity
+      end
     else
       flash[:message] = "このツイートはいいねされていません"
       redirect_to root_path, status: :unprocessable_entity
