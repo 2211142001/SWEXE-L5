@@ -2,7 +2,7 @@
     <p><%= flash[:message] %></p>
 <% end %>
 
-<% if session[:user_id] %>
+<% if current_user %>
     <p>ユーザーID: <%= @profile.user.uid %></p>
     <%= form_with model: @profile, url: profile_path, method: :post  do |f| %>
         <%= f.label :message, 'プロフィール' %>

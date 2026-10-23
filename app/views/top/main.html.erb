@@ -37,7 +37,7 @@
     <p><%= flash[:message] %></p>
 <% end %>
 
-<% if session[:user_id] %>
+<% if current_user %>
     <%= link_to 'ログアウト', signout_path %>
 <% else %>
     <%= link_to 'ログイン', signin_path %>
@@ -45,7 +45,7 @@
 <% end %>
 
 <div class="main">
-    <% if session[:user_id] %>
+    <% if current_user %>
         <%= form_with url: tweet_path, method: :post do |form| %>
             <%= form.text_area :message, placeholder: "いまなにしてる？" %>
             <%= form.submit "ツイート" %>
@@ -63,11 +63,11 @@
             <div><%= tweet.message %></div>
             <div class="controller">
                 <div><%= tweet.likes.count %>いいね</div>
-                <% if session[:user_id] %>
+                <% if current_user %>
                     <%= link_to 'いいね', like_tweet_path(tweet.id), data: { turbo_method: :post } %>
                     <%= link_to 'いいね解除', like_tweet_path(tweet.id), data: { turbo_method: :delete } %>
                     <div class="spacer"></div>
-                    <% if tweet.user.id == session[:user_id] %>
+                    <% if tweet.user.id == current_user.id %>
                         <%= link_to '削除', delete_tweet_path(tweet.id), data: { turbo_method: :delete } %>
                     <% end %>
                 <% end %>

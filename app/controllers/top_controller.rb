@@ -56,7 +56,7 @@ class TopController < ApplicationController
   end
 
   def create_tweet
-    user = User.find(session[:user_id])
+    user = current_user
     tweet = Tweet.new(message: params[:message])
     user.tweets << tweet
 
@@ -71,7 +71,7 @@ class TopController < ApplicationController
 
   def delete_tweet
     tweet = Tweet.find(params[:id])
-    if tweet.user_id != session[:user_id]
+    if tweet.user_id != current_user.id
       flash[:message] = "このツイートは削除できません"
       redirect_to root_path, status: :forbidden
       return
@@ -87,7 +87,7 @@ class TopController < ApplicationController
   end
 
   def like_tweet
-    user = User.find(session[:user_id])
+    user = current_user
     liked_tweet = user.like_tweets.find_by(id: params[:id])
     if liked_tweet
       flash[:message] = "このツイートは既にいいねされています"
@@ -108,7 +108,7 @@ class TopController < ApplicationController
   end
 
   def unlike_tweet
-    user = User.find(session[:user_id])
+    user = current_user
     tweet = Tweet.find(params[:id])
     liked_tweet = user.like_tweets.find_by(id: tweet.id)
 
@@ -123,15 +123,15 @@ class TopController < ApplicationController
   end
 
   def profile
-    @profile = Profile.find_by(user_id: session[:user_id]) || Profile.new(user_id: session[:user_id])
+    @profile = current_user || Profile.new(user_id: current_user.id)
   end
 
   def update_profile
-    @profile = Profile.find_by(user_id: session[:user_id]) || Profile.new(user_id: session[:user_id])
+    @profile = current_user || Profile.new(user_id: current_user.id)
     @profile.message = params[:profile][:message]
 
     if @profile.save
-      @profile = Profile.find_by(user_id: session[:user_id])
+      @profile = current_user
       flash[:message] = "プロフィールを更新しました"
       redirect_to profile_path
     else
@@ -147,13 +147,13 @@ class TopController < ApplicationController
   end
 
   def redirect_if_signed_in
-    if session[:user_id]
+    if current_user
       redirect_to root_path, notice: "ログイン済みです"
     end
   end
 
   def redirect_if_signed_out
-    if session[:user_id].nil?
+    if current_user.nil?
       redirect_to root_path, notice: "ログインしてください"
     end
   end
