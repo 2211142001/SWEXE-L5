@@ -19,8 +19,6 @@ class TopController < ApplicationController
     end
 
     user = User.new(user_params)
-    user.pass = BCrypt::Password.create(user_params[:pass])
-
     if user.save
       flash[:message] = "ユーザー登録に成功しました"
       session[:user_id] = user.id
@@ -38,7 +36,7 @@ class TopController < ApplicationController
 
   def signin_post
     user = User.find_by(uid: user_params[:uid])
-    if user && BCrypt::Password.new(user.pass) == user_params[:pass]
+    if user && user.authenticate(user_params[:password])
       session[:user_id] = user.id
       flash[:message] = "ログインに成功しました"
       redirect_to root_path
@@ -140,7 +138,7 @@ class TopController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:uid, :pass)
+    params.require(:user).permit(:uid, :password, :password_confirmation)
   end
 
   def redirect_if_signed_in

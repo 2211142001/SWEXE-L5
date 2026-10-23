@@ -18,8 +18,14 @@
     <%= f.text_field :uid %>
   </p>
   <p>
-    <%= f.label :pass, 'パスワード' %>
-    <%= f.password_field :pass %>
+    <%= f.label :password, 'パスワード' %>
+    <%= f.password_field :password %>
   </p>
-    <%= f.submit signup ? '登録' : 'ログイン' %>
+  <% if signup %>
+    <p>
+      <%= f.label :password_confirmation, 'パスワード (確認)' %>
+      <%= f.password_field :password_confirmation %>
+    </p>
+  <% end %>
+  <%= f.submit signup ? '登録' : 'ログイン' %>
 <% end %>
